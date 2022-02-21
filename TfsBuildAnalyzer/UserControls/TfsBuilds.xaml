@@ -1,0 +1,231 @@
+﻿<UserControl x:Class="TfsBuildAnalyzer.UserControls.TfsBuilds"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:TfsBuildAnalyzerModels="clr-namespace:TfsBuildAnalyzerModels;assembly=TfsBuildAnalyzerModels"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             Initialized="TfsBuilds_OnInitialized"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <DockPanel Background="LightGray">
+            <DockPanel Name="LoadingBuildsInfoPanel" Visibility="Collapsed" Margin="5,5,5,0" Background="Beige" Dock="Top">
+                <Label Name="LoadingBuildsInfoLabel" Content="Loading all TFS builds..." VerticalAlignment="Center"></Label>
+                <Button Name="ReloadBuildDefinitionsButton" ToolTip="Refresh Builds for project" HorizontalAlignment="Right" Width="80" Margin="5" Height="24" 
+                        Click="ReloadBuildDefinitionsButton_OnClick" Visibility="Collapsed" Content="Reload"></Button>
+            </DockPanel>
+            <DockPanel Dock="Top" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <ComboBox Name="ProjectCatalogComboBox" SelectionChanged="ProjectCatalogComboBox_OnSelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Margin="5"></ComboBox>
+                <ComboBox Name="ProjectTypeComboBox" SelectionChanged="ProjectTypeComboBox_OnSelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Margin="5"></ComboBox>
+                <DockPanel HorizontalAlignment="Right">
+                    <CheckBox Name="ShowOnlyMyBuildsCheckBox" Content="Show only my builds" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnChecked" Margin="0,0,5,0" VerticalAlignment="Center"></CheckBox>
+                </DockPanel>
+            </DockPanel>
+            <DockPanel Margin="5">
+                <DockPanel Width="380">
+                    <Label DockPanel.Dock="Top" Content="Double click to show completed builds."></Label>
+                    <DataGrid Name="FavoriteBuildNamesGrid" AutoGenerateColumns="False" DockPanel.Dock="Top" MinHeight="160" MaxHeight="280" IsReadOnly="True" GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="LightSeaGreen"
+                              SelectionChanged="FavoriteBuildNamesGrid_OnSelectionChanged" SelectionMode="Single" SelectionUnit="FullRow" MouseDoubleClick="FavoriteBuildNamesGrid_OnMouseDoubleClick"
+                              CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True">
+                        <DataGrid.Columns>
+                            <DataGridHyperlinkColumn Header="Favorite Builds" Binding="{Binding BuildName}" IsReadOnly="True" Width="10*">
+                                <DataGridHyperlinkColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Tag" Value="{Binding Url}" />
+                                        <Setter Property="Margin" Value="2,2,2,2" />
+                                        <EventSetter Event="Hyperlink.Click" Handler="OnBuildClickHandler"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                    </Style>
+                                </DataGridHyperlinkColumn.ElementStyle>
+                            </DataGridHyperlinkColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="ToolTip" Value="{Binding BuildName}"/>
+                                <Setter Property="Height" Value="28" />
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="DarkGray" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
+                                </Style.Resources>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.CommandBindings>
+                            <CommandBinding Command="Copy" Executed="CommandBinding_OnExecuted" />
+                        </DataGrid.CommandBindings>
+                        <DataGrid.InputBindings>
+                            <KeyBinding Key="C" Modifiers="Control" Command="Copy" />
+                        </DataGrid.InputBindings>
+                    </DataGrid>
+                    <DockPanel Margin="0,10,0,0">
+                        <DockPanel Dock="Top" Margin="0,5,0,5">
+                            <Label Content="Search ( '*' supported)"></Label>
+                            <TextBox Name="AllBuildTypeSearchTextBox" Width="160" Height="26" Margin="5,0,0,0" TextChanged="AllBuildTypeSearchTextBox_OnTextChanged"></TextBox>
+                            <Separator Foreground="DarkGray" Margin="30,0,0,0">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <Button Name="ToggleFavoriteButton" Width="28" Height="28" HorizontalAlignment="Right" ToolTip="Toggle Favorite for selected build" Cursor="Hand" Click="ToggleFavoriteButton_OnClick">
+                                <Image Source="../Resources/ToggleIcon.png"></Image>
+                            </Button>
+                        </DockPanel>
+                        <DataGrid Name="AllBuildNamesGrid" DockPanel.Dock="Top" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="LightSeaGreen"
+                                  SelectionChanged="AllBuildNamesGrid_OnSelectionChanged" SelectionMode="Single" SelectionUnit="FullRow" MouseDoubleClick="AllBuildNamesGrid_OnMouseDoubleClick"
+                                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridHyperlinkColumn Header="All Builds" Binding="{Binding BuildName}" IsReadOnly="True" Width="10*">
+                                    <DataGridHyperlinkColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Tag" Value="{Binding Url}" />
+                                            <Setter Property="Margin" Value="2,2,2,2" />
+                                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                            <EventSetter Event="Hyperlink.Click" Handler="OnBuildClickHandler"/>
+                                        </Style>
+                                    </DataGridHyperlinkColumn.ElementStyle>
+                                </DataGridHyperlinkColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="ToolTip" Value="{Binding BuildName}"/>
+                                    <Setter Property="Height" Value="28" />
+                                    <Style.Resources>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="DarkGray" />
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
+                                    </Style.Resources>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.CommandBindings>
+                                <CommandBinding Command="Copy" Executed="CommandBinding_OnExecuted" />
+                            </DataGrid.CommandBindings>
+                            <DataGrid.InputBindings>
+                                <KeyBinding Key="C" Modifiers="Control" Command="Copy" />
+                            </DataGrid.InputBindings>
+                        </DataGrid>
+                    </DockPanel>
+                </DockPanel>
+                <DockPanel Margin="5,0,0,0">
+                    <DockPanel Dock="Top">
+                        <Label Content="Double click a build to analyze."></Label>
+                        <Label Name="CompletedBuildsStatusLabel" HorizontalAlignment="Right"></Label>
+                    </DockPanel>
+                    <DataGrid Name="BuildDetailsGrid" AutoGenerateColumns="False" DockPanel.Dock="Right" IsReadOnly="True"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="LightSeaGreen"
+                              MouseDoubleClick="BuildDetailsGrid_OnMouseDoubleClick"
+                              VerticalContentAlignment="Center"
+                              CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" 
+                              CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="32" MaxWidth="32">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <iconPacks:PackIconMaterial Width="20" Height="20" Margin="2,0,2,0" ToolTip="{Binding BuildStatus}">
+                                            <iconPacks:PackIconMaterial.Style>
+                                                <Style TargetType="iconPacks:PackIconMaterial">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding BuildStatus}" Value="Canceled">
+                                                            <Setter Property="Kind" Value="StopCircle"/>
+                                                            <Setter Property="Foreground" Value="SlateGray"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding BuildStatus}" Value="Succeeded">
+                                                            <Setter Property="Kind" Value="CheckCircle"/>
+                                                            <Setter Property="Foreground" Value="Green"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding BuildStatus}" Value="Failed">
+                                                            <Setter Property="Kind" Value="CloseCircle"/>
+                                                            <Setter Property="Foreground" Value="Red"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding BuildStatus}" Value="PartiallySucceeded">
+                                                            <Setter Property="Kind" Value="AlertCircle"/>
+                                                            <Setter Property="Foreground" Value="Orange"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding BuildStatus}" Value="None">
+                                                            <Setter Property="Kind" Value="PlayCircle"/>
+                                                            <Setter Property="Foreground" Value="SlateGray"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                                </Style>
+                                            </iconPacks:PackIconMaterial.Style>
+                                        </iconPacks:PackIconMaterial>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridHyperlinkColumn Header="Name" Binding="{Binding BuildNumber}"  MinWidth="200">
+                                <DataGridHyperlinkColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Tag" Value="{Binding Url}" />
+                                        <Setter Property="Margin" Value="5,0,5,0" />
+                                        <EventSetter Event="Hyperlink.Click" Handler="OnBuildClickHandler"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                                    </Style>
+                                </DataGridHyperlinkColumn.ElementStyle>
+                                <DataGridHyperlinkColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridHyperlinkColumn.HeaderStyle>
+                            </DataGridHyperlinkColumn>
+                            <DataGridTextColumn Header="Completed On" Binding="{Binding DateCompleted}"  MinWidth="160">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Requested By" Binding="{Binding RequestedBy}" MinWidth="160">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Height" Value="40" />
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="DarkGray" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
+                                </Style.Resources>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.CommandBindings>
+                            <CommandBinding Command="Copy" Executed="CommandBinding_OnExecuted" />
+                        </DataGrid.CommandBindings>
+                        <DataGrid.InputBindings>
+                            <KeyBinding Key="C" Modifiers="Control" Command="Copy" />
+                        </DataGrid.InputBindings>
+                    </DataGrid>
+                </DockPanel>
+            </DockPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

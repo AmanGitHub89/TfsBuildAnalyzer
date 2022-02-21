@@ -1,0 +1,120 @@
+﻿<Window x:Class="TfsBuildAnalyzer.Windows.CompareBuildsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:userControls="clr-namespace:TfsBuildAnalyzer.UserControls"
+        xmlns:TfsBuildAnalyzerModels="clr-namespace:TfsBuildAnalyzerModels;assembly=TfsBuildAnalyzerModels"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        Loaded="CompareBuildsWindow_OnLoaded"
+        Closed="CompareBuildsWindow_OnClosed"
+        Title="Compare Builds" Height="600" Width="900">
+    <Grid Background="DarkGray">
+        <Label Name="BuildCompareInfoLabel" Margin="10,10,10,10" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"></Label>
+        <DockPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,10,10">
+            <ComboBox Name="FailedFilterTypeCombobox" Width="100" SelectionChanged="FailedFilterTypeCombobox_OnSelectionChanged">
+                <ComboBoxItem IsSelected="True">Test Name</ComboBoxItem>
+                <ComboBoxItem>Change</ComboBoxItem>
+                <ComboBoxItem>Previous Error</ComboBoxItem>
+                <ComboBoxItem>Current Error</ComboBoxItem>
+                <ComboBoxItem>Previous File</ComboBoxItem>
+                <ComboBoxItem>Current File</ComboBoxItem>
+            </ComboBox>
+            <ComboBox Name="PassedFilterTypeCombobox" Visibility="Collapsed" Width="100" SelectionChanged="PassedFilterTypeCombobox_OnSelectionChanged">
+                <ComboBoxItem IsSelected="True">Test Name</ComboBoxItem>
+                <ComboBoxItem>Previous Error</ComboBoxItem>
+                <ComboBoxItem>Previous File</ComboBoxItem>
+                <ComboBoxItem>Current File</ComboBoxItem>
+            </ComboBox>
+            <TextBox Name="SearchTextBox" TextChanged="SearchTextBox_OnTextChanged" VerticalAlignment="Center" Height="26" HorizontalAlignment="Left" Margin="10,0,0,0" Width="400"></TextBox>
+        </DockPanel>
+        <Label Name="SelectedRowsCountLabel" Content="0 rows selected." Margin="0,10,10,0" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Right"></Label>
+        <Label Name="DisplayedResultsCountLabel" Content="Another" Margin="0,34,10,0" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Right"></Label>
+        <Button Name="ExportToExcel" HorizontalAlignment="Right" VerticalAlignment="top" Margin="0,64,10,0" ToolTip="Export to Excel" Padding="0" BorderThickness="0"
+                Cursor="Hand" Click="ExportToExcel_OnClick" Background="Transparent">
+            <Image Source="../Resources/ExportToExcel.png" RenderOptions.BitmapScalingMode="Fant" Width="34" Height="34" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Button>
+
+        <TabControl Name="TabControl1" Background="DarkGray" Margin="10,80,10,10" SelectionChanged="Selector_OnSelectionChanged">
+            <TabItem Name="FailedIgnoredTabItem" Header="Failed/Ignored" Width="250">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                    <DataGrid Name="FailedDataGrid" ItemsSource="{Binding DisplayedFailedDelta}" IsReadOnly="True" MouseDoubleClick="FailedDataGrid_OnMouseDoubleClick" SelectionChanged="FailedDataGrid_OnSelectionChanged"
+                              CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True" CanUserAddRows="False" CanUserDeleteRows="False"
+                              AutoGenerateColumns="False" Background="LightGray" RowHeight="50">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Test Name" Width="400" Binding="{Binding TestName}" />
+                            <DataGridTextColumn Header="Change" Binding="{Binding Change}" />
+                            <DataGridTextColumn Header="Previous Status" Binding="{Binding PreviousStatus}" />
+                            <DataGridTextColumn Header="Current Status" Binding="{Binding CurrentStatus}" />
+                            <DataGridTextColumn Header="Previous Error" Width="200" Binding="{Binding PreviousError}" />
+                            <DataGridTextColumn Header="Current Error" Width="200" Binding="{Binding CurrentError}" />
+                            <DataGridTemplateColumn Header="Actions" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <userControls:DataGridActions VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Previous Agent" Binding="{Binding PreviousAgent}" />
+                            <DataGridTextColumn Header="Current Agent" Binding="{Binding CurrentAgent}" />
+                            <DataGridTextColumn Header="Previous FilePath" Width="200" Binding="{Binding PreviousFilePath}" />
+                            <DataGridTextColumn Header="Current FilePath" Width="200" Binding="{Binding CurrentFilePath}" />
+                        </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStatus}" Value="Failed">
+                                        <Setter Property="Background" Value="{x:Static TfsBuildAnalyzerModels:ResultColors.FailedColor}"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CurrentStatus}" Value="Ignored">
+                                        <Setter Property="Background" Value="{x:Static TfsBuildAnalyzerModels:ResultColors.FailedColor}"></Setter>
+                                    </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding PreviousStatus}" Value="Passed" />
+                                            <Condition Binding="{Binding CurrentStatus}" Value="Failed" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Background" Value="{x:Static TfsBuildAnalyzerModels:ResultColors.NewFailureColor}" />
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding PreviousStatus}" Value="Passed" />
+                                            <Condition Binding="{Binding CurrentStatus}" Value="Ignored" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Background" Value="{x:Static TfsBuildAnalyzerModels:ResultColors.NewFailureColor}" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Name="PassedTabItem" Header="Passed" Width="250">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <DataGrid Name="PassedDataGrid" ItemsSource="{Binding DisplayedPassedDelta}" IsReadOnly="True" MouseDoubleClick="PassedDataGrid_OnMouseDoubleClick" SelectionChanged="PassedDataGrid_OnSelectionChanged"
+                              CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True" CanUserAddRows="False" CanUserDeleteRows="False"
+                              AutoGenerateColumns="False" Background="LightGray" RowHeight="50" RowBackground="{x:Static TfsBuildAnalyzerModels:ResultColors.PassedColor}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Test Name" Width="400" Binding="{Binding TestName}" />
+                            <DataGridTextColumn Header="Previous Status" Binding="{Binding PreviousStatus}" />
+                            <DataGridTextColumn Header="Previous Error" Width="200" Binding="{Binding PreviousError}" />
+                            <DataGridTemplateColumn Header="Actions" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <userControls:DataGridActions VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Previous Agent" Binding="{Binding PreviousAgent}" />
+                            <DataGridTextColumn Header="Current Agent" Binding="{Binding CurrentAgent}" />
+                            <DataGridTextColumn Header="Previous FilePath" Width="200" Binding="{Binding PreviousFilePath}" />
+                            <DataGridTextColumn Header="Current FilePath" Width="200" Binding="{Binding CurrentFilePath}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

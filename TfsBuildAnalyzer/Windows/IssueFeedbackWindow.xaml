@@ -1,0 +1,16 @@
+﻿<Window x:Class="TfsBuildAnalyzer.Windows.IssueFeedbackWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Loaded="IssueFeedbackWindow_OnLoaded"
+        Title="" Height="400" Width="600">
+    <Grid Background="DarkGray">
+        <Label Name="IssueLabel" Visibility="Hidden" FontWeight="Bold" Content="Please describe the issue in detail." HorizontalAlignment="Center" Margin="0,20,0,0" />
+        <Label Name="FeedbackLabel" Visibility="Hidden" FontWeight="Bold" Content="Please enter your feedback/suggestions." HorizontalAlignment="Center" Margin="0,20,0,0" />
+        <TextBox Name="IssueFeedbackTextBox" Margin="40,60,40,90" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></TextBox>
+        <Button Content="Submit" HorizontalAlignment="Center" Height="30" Click="ButtonBase_OnClick" Padding="30,0,30,0" VerticalAlignment="Bottom" Margin="0,0,0,30"></Button>
+    </Grid>
+</Window>

@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="TfsBuildAnalyzer.UserControls.DataGridActions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TfsBuildAnalyzer"
+             mc:Ignorable="d" 
+             Padding="10,10,10,10"
+             d:DesignHeight="50" d:DesignWidth="90">
+    <Grid>
+        <Button Name="HistoryButton" Width="30" Height="30" Background="Transparent" Margin="0,0,0,0" ToolTip="Test History" Padding="0,0,0,0" BorderThickness="0"
+                HorizontalAlignment="Left" VerticalAlignment="Center" Cursor="Hand" Click="HistoryButton_OnClick">
+            <Image Source="../Resources/HistoryIcon.png" RenderOptions.BitmapScalingMode="Fant"  Width="30" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Button>
+        <Button Name="TfsBacklogButton" Width="30" Height="30" Background="Transparent" Margin="40,0,0,0" ToolTip="Linked Backlogs" Padding="0,0,0,0" BorderThickness="0"
+                HorizontalAlignment="Left" VerticalAlignment="Center"  Cursor="Hand" Click="TfsBacklogButton_OnClick">
+            <Image Name="TfsIcon" RenderOptions.BitmapScalingMode="Fant" Width="30" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Image.Style>
+                    <Style TargetType="{x:Type Image}">
+                        <Setter Property="Source" Value="../Resources/TFSIcon.png" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasItems}" Value="True">
+                                <Setter Property="Source" Value="../Resources/TFSIcon_HasItems.png"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
+    </Grid>
+</UserControl>

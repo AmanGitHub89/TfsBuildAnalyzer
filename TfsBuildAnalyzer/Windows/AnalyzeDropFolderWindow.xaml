@@ -1,0 +1,17 @@
+﻿<types:FixedSizeChildWindow x:Class="TfsBuildAnalyzer.Windows.AnalyzeDropFolderWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:userControls="clr-namespace:TfsBuildAnalyzer.UserControls"
+                      xmlns:types="clr-namespace:TfsBuildAnalyzer.Types"
+                      mc:Ignorable="d"
+                      Closing="AnalyzeDropFolderWindow_OnClosing"
+                      WindowStartupLocation="CenterScreen"
+                      Loaded="AnalyzeDropFolderWindow_OnLoaded"
+                      Title="Analyzing Drop Folder" Height="200" Width="400">
+    <Grid Background="DarkGray">
+        <Label Name="BuildNumberLabel" HorizontalAlignment="Center" FontWeight="Bold" VerticalAlignment="Top" Margin="0,10,0,0" Content="Analyzing Drop folder ***"></Label>
+        <userControls:ProgressControl x:Name="ProgressControl1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,40,0,0"></userControls:ProgressControl>
+    </Grid>
+</types:FixedSizeChildWindow>

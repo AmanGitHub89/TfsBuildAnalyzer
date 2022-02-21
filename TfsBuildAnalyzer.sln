@@ -1,0 +1,70 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TfsBuildAnalyzer Database", "TfsBuildAnalyzer Database", "{5A3E1E97-36F4-4011-AD69-CCFF5417A90B}"
+	ProjectSection(SolutionItems) = preProject
+		TfsBuildAnalyzer Database\BacklogItemExists.sql = TfsBuildAnalyzer Database\BacklogItemExists.sql
+		TfsBuildAnalyzer Database\CreateTable.sql = TfsBuildAnalyzer Database\CreateTable.sql
+		TfsBuildAnalyzer Database\sp_ConsistentFailures.sql = TfsBuildAnalyzer Database\sp_ConsistentFailures.sql
+		TfsBuildAnalyzer Database\sp_DeleteResult.sql = TfsBuildAnalyzer Database\sp_DeleteResult.sql
+		TfsBuildAnalyzer Database\sp_GetBacklogItems.sql = TfsBuildAnalyzer Database\sp_GetBacklogItems.sql
+		TfsBuildAnalyzer Database\sp_GetBacklogItemsForTestList.sql = TfsBuildAnalyzer Database\sp_GetBacklogItemsForTestList.sql
+		TfsBuildAnalyzer Database\sp_GetBuildInfo.sql = TfsBuildAnalyzer Database\sp_GetBuildInfo.sql
+		TfsBuildAnalyzer Database\sp_GetBuildTypes.sql = TfsBuildAnalyzer Database\sp_GetBuildTypes.sql
+		TfsBuildAnalyzer Database\sp_GetRecentBuilds.sql = TfsBuildAnalyzer Database\sp_GetRecentBuilds.sql
+		TfsBuildAnalyzer Database\sp_GetResults.sql = TfsBuildAnalyzer Database\sp_GetResults.sql
+		TfsBuildAnalyzer Database\sp_GetTestHistory.sql = TfsBuildAnalyzer Database\sp_GetTestHistory.sql
+		TfsBuildAnalyzer Database\sp_InsertAppFeedback.sql = TfsBuildAnalyzer Database\sp_InsertAppFeedback.sql
+		TfsBuildAnalyzer Database\sp_InsertAppIssue.sql = TfsBuildAnalyzer Database\sp_InsertAppIssue.sql
+		TfsBuildAnalyzer Database\sp_InsertBacklogItem.sql = TfsBuildAnalyzer Database\sp_InsertBacklogItem.sql
+		TfsBuildAnalyzer Database\sp_InsertResults.sql = TfsBuildAnalyzer Database\sp_InsertResults.sql
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbConnect", "DbConnect\DbConnect.csproj", "{1B0F21F3-E923-4FFE-818D-0AAB06C097EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsBuildAnalyzerModels", "TfsBuildAnalyzerModels\TfsBuildAnalyzerModels.csproj", "{A73FA479-E7D8-48C2-8B11-90DEF83FCA90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsBuildAnalyzerDatabaseInstaller", "TfsBuildAnalyzerDatabaseInstaller\TfsBuildAnalyzerDatabaseInstaller.csproj", "{C8322A5A-03CE-4A59-B04B-817565B1A215}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsBuildAnalyzer", "TfsBuildAnalyzer\TfsBuildAnalyzer.csproj", "{1EF2AC81-CA2F-4012-911C-76FEDCF18CA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		All|Any CPU = All|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B0F21F3-E923-4FFE-818D-0AAB06C097EB}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{1B0F21F3-E923-4FFE-818D-0AAB06C097EB}.All|Any CPU.Build.0 = Release|Any CPU
+		{1B0F21F3-E923-4FFE-818D-0AAB06C097EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B0F21F3-E923-4FFE-818D-0AAB06C097EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B0F21F3-E923-4FFE-818D-0AAB06C097EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B0F21F3-E923-4FFE-818D-0AAB06C097EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A73FA479-E7D8-48C2-8B11-90DEF83FCA90}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{A73FA479-E7D8-48C2-8B11-90DEF83FCA90}.All|Any CPU.Build.0 = Release|Any CPU
+		{A73FA479-E7D8-48C2-8B11-90DEF83FCA90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A73FA479-E7D8-48C2-8B11-90DEF83FCA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A73FA479-E7D8-48C2-8B11-90DEF83FCA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A73FA479-E7D8-48C2-8B11-90DEF83FCA90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8322A5A-03CE-4A59-B04B-817565B1A215}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{C8322A5A-03CE-4A59-B04B-817565B1A215}.All|Any CPU.Build.0 = Release|Any CPU
+		{C8322A5A-03CE-4A59-B04B-817565B1A215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8322A5A-03CE-4A59-B04B-817565B1A215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8322A5A-03CE-4A59-B04B-817565B1A215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8322A5A-03CE-4A59-B04B-817565B1A215}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EF2AC81-CA2F-4012-911C-76FEDCF18CA4}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{1EF2AC81-CA2F-4012-911C-76FEDCF18CA4}.All|Any CPU.Build.0 = Release|Any CPU
+		{1EF2AC81-CA2F-4012-911C-76FEDCF18CA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EF2AC81-CA2F-4012-911C-76FEDCF18CA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EF2AC81-CA2F-4012-911C-76FEDCF18CA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EF2AC81-CA2F-4012-911C-76FEDCF18CA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F45A0778-0A6F-4552-B64D-7E1B104ACF69}
+	EndGlobalSection
+EndGlobal
